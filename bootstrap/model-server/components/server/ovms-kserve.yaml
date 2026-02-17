@@ -46,6 +46,9 @@ spec:
         - '--rest_bind_address=0.0.0.0'
         - '--target_device=AUTO'
         - '--metrics_enable'
+        - '--allowed_headers=*'
+        - '--allowed_methods=GET,POST,OPTIONS'
+        - '--allowed_origins=*'
       ports:
         - containerPort: 8888
           protocol: TCP
