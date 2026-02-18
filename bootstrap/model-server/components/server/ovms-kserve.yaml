@@ -35,7 +35,7 @@ spec:
     - grpc-v2
   containers:
     - name: kserve-container
-      image: quay.io/modh/openvino_model_server@sha256:53b7fcf95de9b81e4c8652d0bf4e84e22d5b696827a5d951d863420c68b9cfe8
+      image: openvino/model_server:2025.4-gpu
       args:
         - '--model_name={{.Name}}'
         - '--port=8001'
