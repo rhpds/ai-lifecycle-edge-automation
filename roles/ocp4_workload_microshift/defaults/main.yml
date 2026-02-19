@@ -1,0 +1,49 @@
+---
+# Namespace where the MicroShift KubeVirt VM and related resources are created
+ocp4_workload_microshift_vm_namespace: microshift-001
+
+# Resource name prefix used for the VM, service, routes, and labels
+ocp4_workload_microshift_name: microshift
+
+# --------------------------------
+# VM Image Source
+# --------------------------------
+# URL to the QCOW2 or IMG file used as the VM root disk.
+# This can point to a public HTTP URL or a private S3 bucket.
+# If S3 credentials are provided below, the image is downloaded via S3.
+# Otherwise, a plain HTTP download is used.
+# ocp4_workload_microshift_vm_image: https://s3.us-east-1.amazonaws.com/rhdp-images/rhel96-microshift419.qcow2
+
+# --------------------------------
+# S3 Authentication (optional)
+# --------------------------------
+# When set, the role creates a Kubernetes Secret with these credentials
+# and uses the CDI S3 source to download the VM image.
+# Leave unset to use unauthenticated HTTP download instead.
+# ocp4_workload_microshift_s3_access_key: ""
+# ocp4_workload_microshift_s3_secret_key: ""
+# ocp4_workload_microshift_s3_region: us-east-1
+
+# --------------------------------
+# VM Disk Configuration
+# --------------------------------
+# Size of the additional PVC used by MicroShift for pod persistent storage.
+# This is NOT the root disk size (root disk is 30Gi, set in the dataVolumeTemplate).
+ocp4_workload_microshift_disk_size: 10Gi
+
+# Name of the PVC backing the MicroShift storage disk
+ocp4_workload_microshift_disk_name: rhel96-microshift-mshiftdisk
+
+# --------------------------------
+# Bastion Access
+# --------------------------------
+# User on the bastion host used for SSH key generation and kubeconfig retrieval.
+# The role generates an SSH keypair under this user's home directory and copies
+# the MicroShift kubeconfig from the VM to the bastion for CLI access.
+ocp4_workload_microshift_bastion_user: "{{ student_name | default(ansible_user) }}"
+
+# Path on the bastion where the SSH private key for the VM is stored
+ocp4_workload_microshift_vm_ssh_key: "/home/{{ ocp4_workload_microshift_bastion_user }}/.ssh/{{ ocp4_workload_microshift_vm_namespace }}"
+
+# Path on the bastion where the MicroShift kubeconfig is stored
+ocp4_workload_microshift_vm_kubeconfig: "/home/{{ ocp4_workload_microshift_bastion_user }}/.kube/{{ ocp4_workload_microshift_vm_namespace }}"

@@ -1,0 +1,24 @@
+---
+namespace: ai_ml_edge
+name: workshop
+version: 1.0.0
+readme: README.md
+authors:
+  - Your Name <your.email@example.com>
+
+description: Ansible collection for deploying the AI/ML Lifecycle workshop on OpenShift
+
+license:
+  - GPL-2.0-or-later
+
+tags:
+  - openshift
+  - workshop
+  - gitops
+
+dependencies: {}
+
+build_ignore:
+  - .git
+  - .gitignore
+  - .DS_Store

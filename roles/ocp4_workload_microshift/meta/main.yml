@@ -1,0 +1,19 @@
+---
+galaxy_info:
+  role_name: ocp4_workload_microshift
+  author: Diego Alvarez (dialvare@redhat.com)
+  description: |
+    Deploy a MicroShift instance inside a KubeVirt VM on OpenShift.
+    Creates the VM from a pre-built QCOW2 image, sets up networking
+    (service, ingress route, API route), and copies the kubeconfig
+    to the bastion for CLI access.
+  license: MIT
+  min_ansible_version: "2.9"
+  platforms: []
+  galaxy_tags:
+  - ocp4
+  - openshift
+  - microshift
+  - kubevirt
+  - edge
+dependencies: []

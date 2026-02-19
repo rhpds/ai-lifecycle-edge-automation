@@ -1,0 +1,7 @@
+---
+- name: Delete MicroShift namespace and all resources
+  kubernetes.core.k8s:
+    state: absent
+    api_version: v1
+    kind: Namespace
+    name: "{{ ocp4_workload_microshift_vm_namespace }}"
