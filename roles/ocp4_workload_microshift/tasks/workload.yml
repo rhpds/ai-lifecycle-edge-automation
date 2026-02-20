@@ -71,6 +71,7 @@
 # Generate SSH keypair on bastion
 # --------------------------------
 - name: Generate SSH keypair for the MicroShift VM
+  delegate_to: bastion
   become: true
   become_user: "{{ ocp4_workload_microshift_bastion_user }}"
   block:
@@ -123,6 +124,7 @@
 # Copy kubeconfig from VM to bastion
 # --------------------------------
 - name: Set up MicroShift kubeconfig on bastion
+  delegate_to: bastion
   become: true
   become_user: "{{ ocp4_workload_microshift_bastion_user }}"
   block:
