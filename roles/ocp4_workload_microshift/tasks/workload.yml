@@ -131,6 +131,57 @@
     seconds: 90
 
 # --------------------------------
+# Install virtctl on bastion
+# --------------------------------
+- name: Get virtctl download URL from ConsoleCLIDownload
+  kubernetes.core.k8s_info:
+    api_version: console.openshift.io/v1
+    kind: ConsoleCLIDownload
+    name: virtctl-clidownloads-kubevirt-hyperconverged
+  register: r_virtctl_cli_download
+  retries: 20
+  delay: 10
+  until:
+    - r_virtctl_cli_download.resources | length > 0
+
+- name: Set virtctl download URL
+  ansible.builtin.set_fact:
+    _ocp4_workload_microshift_virtctl_url: >-
+      {{ r_virtctl_cli_download.resources[0] | to_json | from_json
+      | json_query("spec.links[?contains(href,'linux')].href") | first }}
+
+- name: Install virtctl on bastion
+  delegate_to: bastion
+  become: true
+  block:
+    - name: Download virtctl
+      ansible.builtin.get_url:
+        url: "{{ _ocp4_workload_microshift_virtctl_url }}"
+        validate_certs: false
+        dest: /tmp/virtctl.tar.gz
+        mode: "0660"
+      register: r_virtctl
+      until: r_virtctl is success
+      retries: 10
+      delay: 10
+
+    - name: Extract virtctl to /usr/bin
+      ansible.builtin.unarchive:
+        src: /tmp/virtctl.tar.gz
+        remote_src: true
+        dest: /usr/bin
+        mode: "0775"
+        owner: root
+        group: root
+      args:
+        creates: /usr/bin/virtctl
+
+    - name: Clean up virtctl tarball
+      ansible.builtin.file:
+        state: absent
+        path: /tmp/virtctl.tar.gz
+
+# --------------------------------
 # Copy kubeconfig from VM to bastion
 # --------------------------------
 - name: Set up MicroShift kubeconfig on bastion
