@@ -136,6 +136,14 @@
   become: true
   become_user: "{{ ocp4_workload_microshift_bastion_user }}"
   block:
+    - name: Ensure .kube directory exists on bastion
+      ansible.builtin.file:
+        path: "/home/{{ ocp4_workload_microshift_bastion_user }}/.kube"
+        state: directory
+        owner: "{{ ocp4_workload_microshift_bastion_user }}"
+        group: users
+        mode: "0700"
+
     - name: Retrieve kubeconfig from MicroShift VM
       ansible.builtin.shell: >-
         virtctl ssh
@@ -144,6 +152,7 @@
         --local-ssh-opts="-o StrictHostKeyChecking=no"
         --command='{{ item }}'
       loop:
+        - mkdir -p /home/cloud-user/.kube
         - sudo cat /var/lib/microshift/resources/kubeadmin/kubeconfig > /home/cloud-user/.kube/config
         - chmod go-r /home/cloud-user/.kube/config
 
