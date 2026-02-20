@@ -120,7 +120,10 @@
   retries: 20
   delay: 30
   until:
-    - vm_microshift.resources[0].status.ready | default(false) | bool
+    - vm_microshift.resources | length > 0
+    - vm_microshift.resources[0].status is defined
+    - vm_microshift.resources[0].status.ready is defined
+    - vm_microshift.resources[0].status.ready | bool
 
 # Allow MicroShift services to fully start inside the VM
 - name: Pause for MicroShift services to initialize
