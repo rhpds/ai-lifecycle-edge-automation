@@ -117,7 +117,7 @@
     name: "{{ ocp4_workload_microshift_name }}"
     namespace: "{{ ocp4_workload_microshift_vm_namespace }}"
   register: vm_microshift
-  retries: 180
+  retries: 20
   delay: 30
   until:
     - vm_microshift.resources[0].status.ready | default(false) | bool
