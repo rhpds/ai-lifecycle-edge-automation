@@ -199,7 +199,7 @@
 
     - name: Retrieve kubeconfig from MicroShift VM
       ansible.builtin.shell: >-
-        virtctl ssh
+        /usr/bin/virtctl ssh
         cloud-user@{{ ocp4_workload_microshift_name }}.{{ ocp4_workload_microshift_vm_namespace }}
         --identity-file={{ ocp4_workload_microshift_vm_ssh_key }}
         --local-ssh-opts="-o StrictHostKeyChecking=no"
@@ -211,7 +211,7 @@
 
     - name: Copy kubeconfig to bastion
       ansible.builtin.shell: >-
-        virtctl scp
+        /usr/bin/virtctl scp
         cloud-user@{{ ocp4_workload_microshift_name }}.{{ ocp4_workload_microshift_vm_namespace }}:/home/cloud-user/.kube/config
         {{ ocp4_workload_microshift_vm_kubeconfig }}
         --identity-file={{ ocp4_workload_microshift_vm_ssh_key }}
