@@ -1,0 +1,10 @@
+{{- if and .Values.rhoai.enabled .Values.operator }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Values.operator.namespace }}
+  annotations:
+    openshift.io/description: "Red Hat OpenShift AI Operator"
+    openshift.io/display-name: "RHOAI Operator"
+{{- end }}

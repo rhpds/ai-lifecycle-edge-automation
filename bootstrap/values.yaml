@@ -7,7 +7,7 @@ deployer:
   apiUrl: https://api.cluster.opentlc.com:6443
 
 git:
-  url: https://github.com/rhpds/ai-lifecycle-edge-gitops
+  url: https://github.com/rhpds/ai-lifecycle-edge-automation
   revision: main
 
 # Set to false to NOT install the Minio SNO
@@ -17,3 +17,81 @@ minioStorageSno:
 # Set to false to NOT install the VM Connectivity resources
 vmConnectivity:
   enabled: true
+
+# Set to false to NOT install RHOAI (operator, DSC, patcher, etc.)
+rhoai:
+  enabled: true
+
+# Default values for rhoai.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Set to empty to NOT install the Operator
+# operator: ''
+operator:
+  name: rhods-operator
+  namespace: redhat-ods-operator
+  channel: fast-3.x
+  installPlanApproval: Manual
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+  # startingCSV: rhods-operator.x.y.x
+
+# Set to empty to NOT install DSCInitialization
+dscinitialization: ''
+# dscinitialization:
+#   name: default-dsci
+#   serviceMesh:
+#     managementState: Removed
+
+# Set to empty to NOT install DataScienceCluster
+# datasciencecluster: ''
+datasciencecluster:
+  name: default-dsc
+  apiVersion: datasciencecluster.opendatahub.io/v2
+  components:
+    aipipelines:
+      argoWorkflowsControllers:
+        managementState: Removed 
+      managementState: Removed
+    dashboard:
+      managementState: Removed
+    feastoperator:
+      managementState: Removed
+    kserve:
+      managementState: Removed
+    kueue:
+      managementState: Removed
+    llamastackoperator:
+      managementState: Removed
+    modelregistry:
+      managementState: Removed
+    ray:
+      managementState: Removed
+    trainingoperator:
+      managementState: Removed
+    trustyai:
+      managementState: Removed
+    workbenches:
+      managementState: Removed
+
+patcher:
+  name: rhoai-patcher
+  namespace: redhat-ods-applications
+  syncwave: "0"
+  image: registry.redhat.io/openshift4/ose-cli
+  route: true
+  dashboard:
+    replicas: 1
+
+# Using sub-chart helper-status-checker
+helper-status-checker:
+  enabled: true
+  approver: true
+  checks:
+    - operatorName: rhods-operator
+      namespace:
+        name: redhat-ods-operator
+      syncwave: '1'
+      serviceAccount:
+        name: "rhoai-status-checker"
