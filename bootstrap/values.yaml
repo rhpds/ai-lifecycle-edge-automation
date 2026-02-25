@@ -32,7 +32,7 @@ operator:
   name: rhods-operator
   namespace: redhat-ods-operator
   channel: fast-3.x
-  installPlanApproval: Manual
+  installPlanApproval: Automatic
   source: redhat-operators
   sourceNamespace: openshift-marketplace
   # startingCSV: rhods-operator.x.y.x
@@ -55,7 +55,7 @@ datasciencecluster:
         managementState: Removed 
       managementState: Removed
     dashboard:
-      managementState: Removed
+      managementState: Managed
     feastoperator:
       managementState: Removed
     kserve:
