@@ -53,13 +53,13 @@ datasciencecluster:
     aipipelines:
       argoWorkflowsControllers:
         managementState: Removed 
-      managementState: Removed
+      managementState: Managed
     dashboard:
       managementState: Managed
     feastoperator:
       managementState: Removed
     kserve:
-      managementState: Removed
+      managementState: Managed
     kueue:
       managementState: Removed
     llamastackoperator:
@@ -73,7 +73,7 @@ datasciencecluster:
     trustyai:
       managementState: Removed
     workbenches:
-      managementState: Removed
+      managementState: Managed
 
 patcher:
   name: rhoai-patcher
