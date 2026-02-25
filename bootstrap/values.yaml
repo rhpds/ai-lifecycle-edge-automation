@@ -53,7 +53,7 @@ datasciencecluster:
     aipipelines:
       argoWorkflowsControllers:
         managementState: Removed 
-      managementState: Managed
+      managementState: Removed
     dashboard:
       managementState: Managed
     feastoperator:
