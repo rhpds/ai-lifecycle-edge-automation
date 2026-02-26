@@ -1,0 +1,12 @@
+{{- if and .Values.rhoai.enabled .Values.rhoaiproject.enabled }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: "ai-edge-project"
+  annotations:
+    openshift.io/description: "AI & Edge Project"
+    openshift.io/display-name: "ai-edge-project"
+  labels:
+    opendatahub.io/dashboard: "true"
+{{- end }}

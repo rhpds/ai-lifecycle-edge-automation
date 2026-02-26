@@ -75,6 +75,9 @@ datasciencecluster:
     workbenches:
       managementState: Managed
 
+rhoaiproject:
+  enabled: true
+
 patcher:
   name: rhoai-patcher
   namespace: redhat-ods-applications
