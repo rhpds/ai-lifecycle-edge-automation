@@ -6,6 +6,8 @@ kind: ServiceAccount
 metadata:
   name: model-training
   namespace: ai-edge-project
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
 ---
 # PVC for workbench storage
 apiVersion: v1
@@ -15,6 +17,7 @@ metadata:
   namespace: ai-edge-project
   annotations:
     opendatahub.io/dashboard: "true"
+    argocd.argoproj.io/sync-wave: "5"
 spec:
   accessModes:
     - ReadWriteOnce
@@ -22,12 +25,15 @@ spec:
     requests:
       storage: 20Gi
 ---
+# Notebook CRD is installed by the operator when DataScienceCluster (sync-wave 3) is reconciled.
+# Workbench must apply after that, hence sync-wave 5. If sync fails with "Notebook CRD not found", sync again after a few minutes.
 apiVersion: kubeflow.org/v1
 kind: Notebook
 metadata:
   name: model-training
   namespace: ai-edge-project
   annotations:
+    argocd.argoproj.io/sync-wave: "5"
     notebooks.opendatahub.io/inject-oauth: "true"
     opendatahub.io/image-display-name: "Jupyter | TensorFlow | CUDA | Python 3.12"
     notebooks.opendatahub.io/oauth-logout-url: "https://rhods-dashboard-redhat-ods-applications.apps.cluster.opentlc.com/projects/ai-edge-project?notebookLogout=model-training"

@@ -50,29 +50,44 @@ datasciencecluster:
   name: default-dsc
   apiVersion: datasciencecluster.opendatahub.io/v2
   components:
+    kserve:
+      nim:
+        managementState: Managed
+      rawDeploymentServiceConfig: Headless
+      managementState: Managed
+    modelregistry:
+      registriesNamespace: rhoai-model-registries
+      managementState: Managed
+    feastoperator:
+      managementState: Managed
+    trustyai:
+      eval:
+        lmeval:
+          permitCodeExecution: deny
+          permitOnline: deny
+      managementState: Managed
     aipipelines:
       argoWorkflowsControllers:
-        managementState: Removed 
+        managementState: Managed
+      managementState: Managed
+    ray:
+      managementState: Managed
+    kueue:
+      defaultClusterQueueName: default
+      defaultLocalQueueName: default
+      managementState: Removed
+    workbenches:
+      workbenchNamespace: rhods-notebooks
+      managementState: Managed
+    mlflowoperator:
       managementState: Removed
     dashboard:
       managementState: Managed
-    feastoperator:
-      managementState: Removed
-    kserve:
-      managementState: Managed
-    kueue:
+    trainer:
       managementState: Removed
     llamastackoperator:
       managementState: Removed
-    modelregistry:
-      managementState: Removed
-    ray:
-      managementState: Removed
     trainingoperator:
-      managementState: Removed
-    trustyai:
-      managementState: Removed
-    workbenches:
       managementState: Managed
 
 rhoaiproject:
