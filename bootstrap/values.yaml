@@ -78,6 +78,12 @@ datasciencecluster:
 rhoaiproject:
   enabled: true
 
+workbench:
+  enabled: true
+
+dataconnection:
+  enabled: true
+
 patcher:
   name: rhoai-patcher
   namespace: redhat-ods-applications

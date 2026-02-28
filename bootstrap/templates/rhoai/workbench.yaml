@@ -1,0 +1,199 @@
+{{- if and .Values.rhoai.enabled .Values.workbench.enabled }}
+---
+# ServiceAccount for the workbench (oauth-proxy uses it)
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: model-training
+  namespace: ai-edge-project
+---
+# PVC for workbench storage
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: model-training-storage
+  namespace: ai-edge-project
+  annotations:
+    opendatahub.io/dashboard: "true"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: kubeflow.org/v1
+kind: Notebook
+metadata:
+  name: model-training
+  namespace: ai-edge-project
+  annotations:
+    notebooks.opendatahub.io/inject-oauth: "true"
+    opendatahub.io/image-display-name: "Jupyter | TensorFlow | CUDA | Python 3.12"
+    notebooks.opendatahub.io/oauth-logout-url: "https://rhods-dashboard-redhat-ods-applications.apps.cluster.opentlc.com/projects/ai-edge-project?notebookLogout=model-training"
+    opendatahub.io/accelerator-name: ""
+    openshift.io/description: "Model training workbench (TensorFlow, CUDA, Python 3.12)"
+    openshift.io/display-name: "model-training"
+    notebooks.opendatahub.io/last-image-selection: "s2i-generic-data-science-cuda-notebook:2025.2"
+    notebooks.opendatahub.io/last-size-selection: Small
+    opendatahub.io/connections: "ai-edge-project/vehicle-models"
+  labels:
+    app: model-training
+spec:
+  template:
+    spec:
+      affinity: {}
+      containers:
+        - name: model-training
+          image: image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-generic-data-science-cuda-notebook:2025.2
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: "2"
+              memory: 8Gi
+            requests:
+              cpu: "1"
+              memory: 8Gi
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /notebook/ai-edge-project/model-training/api
+              port: notebook-port
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /notebook/ai-edge-project/model-training/api
+              port: notebook-port
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          env:
+            - name: NOTEBOOK_ARGS
+              value: |-
+                --ServerApp.port=8888
+                --ServerApp.token=''
+                --ServerApp.password=''
+                --ServerApp.base_url=/notebook/ai-edge-project/model-training
+                --ServerApp.quit_button=False
+                --ServerApp.tornado_settings={"user":"$(USER)","hub_host":"https://rhods-dashboard-redhat-ods-applications.apps.cluster.opentlc.com","hub_prefix":"/projects/ai-edge-project"}
+            - name: JUPYTER_IMAGE
+              value: image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-generic-data-science-cuda-notebook:2025.2
+            - name: PIP_CERT
+              value: /etc/pki/tls/custom-certs/ca-bundle.crt
+            - name: REQUESTS_CA_BUNDLE
+              value: /etc/pki/tls/custom-certs/ca-bundle.crt
+            - name: SSL_CERT_FILE
+              value: /etc/pki/tls/custom-certs/ca-bundle.crt
+            - name: PIPELINES_SSL_SA_CERTS
+              value: /etc/pki/tls/custom-certs/ca-bundle.crt
+            - name: GIT_SSL_CAINFO
+              value: /etc/pki/tls/custom-certs/ca-bundle.crt
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          ports:
+            - containerPort: 8888
+              name: notebook-port
+              protocol: TCP
+          volumeMounts:
+            - name: model-training-storage
+              mountPath: /opt/app-root/src
+            - name: shm
+              mountPath: /dev/shm
+            - name: trusted-ca
+              mountPath: /etc/pki/tls/custom-certs/ca-bundle.crt
+              readOnly: true
+              subPath: ca-bundle.crt
+          workingDir: /opt/app-root/src
+        - name: oauth-proxy
+          image: registry.redhat.io/openshift4/ose-oauth-proxy-rhel9
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 100m
+              memory: 64Mi
+            requests:
+              cpu: 100m
+              memory: 64Mi
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /oauth/healthz
+              port: oauth-proxy
+              scheme: HTTPS
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /oauth/healthz
+              port: oauth-proxy
+              scheme: HTTPS
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          env:
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          ports:
+            - containerPort: 8443
+              name: oauth-proxy
+              protocol: TCP
+          volumeMounts:
+            - name: oauth-config
+              mountPath: /etc/oauth/config
+            - name: tls-certificates
+              mountPath: /etc/tls/private
+          args:
+            - --provider=openshift
+            - --https-address=:8443
+            - --http-address=
+            - --openshift-service-account=model-training
+            - --cookie-secret-file=/etc/oauth/config/cookie_secret
+            - --cookie-expire=24h0m0s
+            - --tls-cert=/etc/tls/private/tls.crt
+            - --tls-key=/etc/tls/private/tls.key
+            - --upstream=http://localhost:8888
+            - --upstream-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+            - --email-domain=*
+            - --skip-provider-button
+            - '--openshift-sar={"verb":"get","resource":"notebooks","resourceAPIGroup":"kubeflow.org","resourceName":"model-training","namespace":"$(NAMESPACE)"}'
+            - --logout-url=https://rhods-dashboard-redhat-ods-applications.apps.cluster.opentlc.com/projects/ai-edge-project?notebookLogout=model-training
+      enableServiceLinks: false
+      serviceAccountName: model-training
+      volumes:
+        - name: model-training-storage
+          persistentVolumeClaim:
+            claimName: model-training-storage
+        - name: shm
+          emptyDir:
+            medium: Memory
+        - name: trusted-ca
+          configMap:
+            name: workbench-trusted-ca-bundle
+            optional: true
+            items:
+              - key: ca-bundle.crt
+                path: ca-bundle.crt
+        - name: oauth-config
+          secret:
+            secretName: model-training-oauth-config
+            defaultMode: 420
+        - name: tls-certificates
+          secret:
+            secretName: model-training-tls
+            defaultMode: 420
+{{- end }}

@@ -1,0 +1,23 @@
+{{- if and .Values.rhoai.enabled .Values.dataconnection.enabled }}
+---
+# S3-compatible data connection: vehicle-models (MinIO)
+# Connection type: S3 compatible object storage - v1
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: vehicle-models
+  namespace: ai-edge-project
+  labels:
+    opendatahub.io/dashboard: "true"
+    opendatahub.io/managed: "true"
+  annotations:
+    opendatahub.io/connection-type-ref: s3
+    openshift.io/display-name: vehicle-models
+stringData:
+  AWS_ACCESS_KEY_ID: minio
+  AWS_SECRET_ACCESS_KEY: minio123
+  AWS_S3_ENDPOINT: http://minio-microshift-vm.microshift-001.svc.cluster.local:30000
+  AWS_DEFAULT_REGION: us-east-1
+  AWS_S3_BUCKET: inference
+{{- end }}
