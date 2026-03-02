@@ -26,7 +26,8 @@ spec:
       storage: 20Gi
 ---
 # Notebook CRD is installed by the operator when DataScienceCluster (sync-wave 3) is reconciled.
-# Workbench must apply after that, hence sync-wave 5. If sync fails with "Notebook CRD not found", sync again after a few minutes.
+# Workbench must apply after that, hence sync-wave 5.
+# SkipDryRunOnMissingResource: do not fail sync if CRD is not installed yet; apply will succeed on next sync once operator has created the CRD.
 apiVersion: kubeflow.org/v1
 kind: Notebook
 metadata:
@@ -34,6 +35,7 @@ metadata:
   namespace: ai-edge-project
   annotations:
     argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
     notebooks.opendatahub.io/inject-oauth: "true"
     opendatahub.io/image-display-name: "Jupyter | TensorFlow | CUDA | Python 3.12"
     notebooks.opendatahub.io/oauth-logout-url: "https://rhods-dashboard-redhat-ods-applications.apps.cluster.opentlc.com/projects/ai-edge-project?notebookLogout=model-training"
