@@ -159,9 +159,9 @@ spec:
               name: kube-rbac-proxy
               protocol: TCP
           volumeMounts:
-            - name: oauth-config
-              mountPath: /etc/oauth/config
-            - name: tls-certificates
+            - name: kube-rbac-proxy-config
+              mountPath: /etc/kube-rbac-proxy
+            - name: kube-rbac-proxy-tls-certificates
               mountPath: /etc/tls/private
           args:
             - '--secure-listen-address=0.0.0.0:8443'
