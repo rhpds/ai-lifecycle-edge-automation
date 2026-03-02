@@ -72,7 +72,6 @@ spec:
         requests:
           cpu: '2'
           memory: 4Gi
-      runtime: stress-detection
       storageUri: 's3://inference/stress-detection/'
     resources:
       limits:
@@ -123,7 +122,6 @@ spec:
         requests:
           cpu: '2'
           memory: 4Gi
-      runtime: time-to-failure
       storageUri: 's3://inference/time-to-failure/'
     resources:
       limits:
