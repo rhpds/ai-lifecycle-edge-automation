@@ -36,14 +36,13 @@ metadata:
   annotations:
     opendatahub.io/image-display-name: Jupyter | TensorFlow | CUDA | Python 3.12
     opendatahub.io/hardware-profile-resource-version: '676888'
-    openshift.io/description: ''
+    openshift.io/description: 'Model training workbench'
     openshift.io/display-name: model-training
     notebooks.opendatahub.io/last-image-version-git-commit-selection: 8e73cac
     notebooks.opendatahub.io/last-image-selection: 'tensorflow:2025.2'
     opendatahub.io/hardware-profile-namespace: redhat-ods-applications
     opendatahub.io/username: admin
     opendatahub.io/hardware-profile-name: default-profile
-    opendatahub.io/connections: ai-edge-project/vehicle-models
     notebooks.opendatahub.io/inject-auth: 'true'
     opendatahub.io/workbench-image-namespace: ''
   labels:
@@ -122,9 +121,6 @@ spec:
               subPath: ca-bundle.crt
             - mountPath: /opt/app-root/pipeline-runtimes/
               name: runtime-images
-          envFrom:
-            - secretRef:
-                name: vehicle-models
           workingDir: /opt/app-root/src
         - name: kube-rbac-proxy
           image: 'registry.redhat.io/rhoai/odh-kube-auth-proxy-rhel9@sha256:1f4b2b9bb5061faf17299c2ae2405ab408e2b7ce349d9831eb6045990e6da005'
