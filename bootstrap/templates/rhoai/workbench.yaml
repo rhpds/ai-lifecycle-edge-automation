@@ -37,7 +37,7 @@ metadata:
     opendatahub.io/image-display-name: Jupyter | TensorFlow | CUDA | Python 3.12
     opendatahub.io/hardware-profile-resource-version: '676888'
     openshift.io/description: ''
-    openshift.io/display-name: model-training-2
+    openshift.io/display-name: model-training
     notebooks.opendatahub.io/last-image-version-git-commit-selection: 8e73cac
     notebooks.opendatahub.io/last-image-selection: 'tensorflow:2025.2'
     opendatahub.io/hardware-profile-namespace: redhat-ods-applications
