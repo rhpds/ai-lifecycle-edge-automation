@@ -92,6 +92,16 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "5"
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    opendatahub.io/hardware-profile-name: default-profile
+    opendatahub.io/connections: serving
+    opendatahub.io/model-type: predictive
+    security.opendatahub.io/enable-auth: 'false'
+    opendatahub.io/hardware-profile-resource-version: '676888'
+    openshift.io/description: 'Time to Failure model server'
+    openshift.io/display-name: time-to-failure
+    serving.kserve.io/deploymentMode: RawDeployment
+    argocd.argoproj.io/tracking-id: 'bootstrap:serving.kserve.io/InferenceService:ai-edge-project/time-to-failure'
+    opendatahub.io/hardware-profile-namespace: redhat-ods-applications
   labels:
     opendatahub.io/dashboard: "true"
 spec:
@@ -101,16 +111,25 @@ spec:
     maxReplicas: 1
     containerConcurrency: 0
     model:
-      protocolVersion: v2
       modelFormat:
         name: openvino_ir
-        version: "opset13"
-      storageUri: "s3://inference/time-to-failure/"
+        version: opset13
+      name: ''
+      protocolVersion: v2
+      resources:
+        limits:
+          cpu: '2'
+          memory: 4Gi
+        requests:
+          cpu: '2'
+          memory: 4Gi
+      runtime: time-to-failure
+      storageUri: 's3://inference/time-to-failure/'
     resources:
       limits:
-        cpu: "2"
+        cpu: '2'
         memory: 8Gi
       requests:
-        cpu: "1"
+        cpu: '1'
         memory: 8Gi
 {{- end }}
