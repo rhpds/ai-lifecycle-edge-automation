@@ -7,34 +7,53 @@ metadata:
   name: stress-detection
   namespace: ai-edge-project
   annotations:
-    openshift.io/display-name: OpenVINO Model Server (Stress Detection)
     argocd.argoproj.io/sync-wave: "6"
+    opendatahub.io/apiProtocol: REST
+    opendatahub.io/recommended-accelerators: '["nvidia.com/gpu"]'
+    opendatahub.io/runtime-version: v2025.3
+    opendatahub.io/serving-runtime-scope: global
+    opendatahub.io/template-display-name: OpenVINO Model Server
+    opendatahub.io/template-name: kserve-ovms
+    openshift.io/display-name: OpenVINO Model Server
   labels:
     opendatahub.io/dashboard: "true"
 spec:
+  annotations:
+    opendatahub.io/kserve-runtime: ovms
+    prometheus.io/path: /metrics
+    prometheus.io/port: '8888'
   multiModel: false
   supportedModelFormats:
-    - name: openvino_ir
+    - autoSelect: true
+      name: openvino_ir
       version: opset13
-      autoSelect: true
     - name: onnx
-      version: "1"
+      version: '1'
+    - autoSelect: true
+      name: tensorflow
+      version: '1'
+    - autoSelect: true
+      name: tensorflow
+      version: '2'
+    - autoSelect: true
+      name: paddle
+      version: '2'
+    - autoSelect: true
+      name: pytorch
+      version: '2'
   protocolVersions:
     - v2
     - grpc-v2
   containers:
     - name: kserve-container
-      image: openvino/model_server:2025.4
+      image: 'registry.redhat.io/rhoai/odh-openvino-model-server-rhel9@sha256:7daebf4a4205b9b81293932a1dfec705f59a83de8097e468e875088996c1f224'
       args:
-        - --model_name={{.Name}}
-        - --port=8001
-        - --rest_port=8888
-        - --model_path=/mnt/models
-        - --file_system_poll_wait_seconds=0
-        - --grpc_bind_address=0.0.0.0
-        - --rest_bind_address=0.0.0.0
-        - --target_device=AUTO
-        - --metrics_enable
+        - '--model_name={{.Name}}'
+        - '--port=8001'
+        - '--rest_port=8888'
+        - '--model_path=/mnt/models'
+        - '--file_system_poll_wait_seconds=0'
+        - '--metrics_enable'
       ports:
         - containerPort: 8888
           protocol: TCP
@@ -46,34 +65,53 @@ metadata:
   name: time-to-failure
   namespace: ai-edge-project
   annotations:
-    openshift.io/display-name: OpenVINO Model Server (Time to Failure)
     argocd.argoproj.io/sync-wave: "6"
+    opendatahub.io/apiProtocol: REST
+    opendatahub.io/recommended-accelerators: '["nvidia.com/gpu"]'
+    opendatahub.io/runtime-version: v2025.3
+    opendatahub.io/serving-runtime-scope: global
+    opendatahub.io/template-display-name: OpenVINO Model Server
+    opendatahub.io/template-name: kserve-ovms
+    openshift.io/display-name: OpenVINO Model Server
   labels:
     opendatahub.io/dashboard: "true"
 spec:
+  annotations:
+    opendatahub.io/kserve-runtime: ovms
+    prometheus.io/path: /metrics
+    prometheus.io/port: '8888'
   multiModel: false
   supportedModelFormats:
-    - name: openvino_ir
+    - autoSelect: true
+      name: openvino_ir
       version: opset13
-      autoSelect: true
     - name: onnx
-      version: "1"
+      version: '1'
+    - autoSelect: true
+      name: tensorflow
+      version: '1'
+    - autoSelect: true
+      name: tensorflow
+      version: '2'
+    - autoSelect: true
+      name: paddle
+      version: '2'
+    - autoSelect: true
+      name: pytorch
+      version: '2'
   protocolVersions:
     - v2
     - grpc-v2
   containers:
     - name: kserve-container
-      image: openvino/model_server:2025.4
+      image: 'registry.redhat.io/rhoai/odh-openvino-model-server-rhel9@sha256:7daebf4a4205b9b81293932a1dfec705f59a83de8097e468e875088996c1f224'
       args:
-        - --model_name={{.Name}}
-        - --port=8001
-        - --rest_port=8888
-        - --model_path=/mnt/models
-        - --file_system_poll_wait_seconds=0
-        - --grpc_bind_address=0.0.0.0
-        - --rest_bind_address=0.0.0.0
-        - --target_device=AUTO
-        - --metrics_enable
+        - '--model_name={{.Name}}'
+        - '--port=8001'
+        - '--rest_port=8888'
+        - '--model_path=/mnt/models'
+        - '--file_system_poll_wait_seconds=0'
+        - '--metrics_enable'
       ports:
         - containerPort: 8888
           protocol: TCP
