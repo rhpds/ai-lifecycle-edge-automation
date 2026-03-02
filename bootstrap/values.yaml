@@ -99,6 +99,9 @@ workbench:
 dataconnection:
   enabled: true
 
+pipelineserver:
+  enabled: true
+
 patcher:
   name: rhoai-patcher
   namespace: redhat-ods-applications

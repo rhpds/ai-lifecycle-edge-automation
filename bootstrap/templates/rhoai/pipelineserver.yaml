@@ -1,0 +1,54 @@
+{{- if and .Values.rhoai.enabled .Values.pipelineserver.enabled }}
+---
+# Secret with MinIO credentials for Data Science Pipelines (DSPA) object storage
+# Access key: minio, Secret key: minio123, Endpoint: http://minio-service.minio.svc.cluster.local:9000, Region: us-east-1, Bucket: pipelines
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: pipelineserver-minio
+  namespace: ai-edge-project
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+stringData:
+  AWS_ACCESS_KEY_ID: minio
+  AWS_SECRET_ACCESS_KEY: minio123
+---
+# Data Science Pipelines Application (DSPA) - one per project, name must be "dspa" for dashboard
+apiVersion: datasciencepipelinesapplications.opendatahub.io/v1
+kind: DataSciencePipelinesApplication
+metadata:
+  name: dspa
+  namespace: ai-edge-project
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  apiServer:
+    deploy: true
+    enableSamplePipeline: false
+    enableOauth: true
+  database:
+    mariaDB:
+      deploy: true
+      pipelineDBName: mlpipeline
+      pvcSize: 10Gi
+      username: mlpipeline
+  dspVersion: v2
+  objectStorage:
+    externalStorage:
+      bucket: pipelines
+      host: minio-service.minio.svc.cluster.local:9000
+      region: us-east-1
+      s3CredentialsSecret:
+        secretName: pipelineserver-minio
+        accessKey: AWS_ACCESS_KEY_ID
+        secretKey: AWS_SECRET_ACCESS_KEY
+      scheme: http
+  persistenceAgent:
+    deploy: true
+    numWorkers: 2
+  scheduledWorkflow:
+    deploy: true
+    cronScheduleTimezone: UTC
+{{- end }}
