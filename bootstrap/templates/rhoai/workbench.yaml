@@ -34,6 +34,7 @@ metadata:
   name: model-training
   namespace: ai-edge-project
   annotations:
+    argocd.argoproj.io/sync-wave: "5"
     opendatahub.io/image-display-name: Jupyter | TensorFlow | CUDA | Python 3.12
     opendatahub.io/hardware-profile-resource-version: '676888'
     openshift.io/description: 'Model training workbench'

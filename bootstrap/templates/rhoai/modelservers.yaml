@@ -12,7 +12,7 @@ metadata:
     serving.kserve.io/s3-usehttps: "0"
     serving.kserve.io/s3-region: us-east-1
     serving.kserve.io/s3-useanoncredential: "false"
-    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-wave: "6"
 stringData:
   AWS_ACCESS_KEY_ID: minio
   AWS_SECRET_ACCESS_KEY: minio123
@@ -25,7 +25,7 @@ metadata:
   name: sa-vehicle-models
   namespace: ai-edge-project
   annotations:
-    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-wave: "6"
   labels:
     opendatahub.io/dashboard: "true"
 secrets:
@@ -39,7 +39,7 @@ metadata:
   name: stress-detection
   namespace: ai-edge-project
   annotations:
-    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-wave: "6"
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
     opendatahub.io/hardware-profile-name: default-profile
     opendatahub.io/connections: serving
@@ -90,7 +90,7 @@ metadata:
   name: time-to-failure
   namespace: ai-edge-project
   annotations:
-    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-wave: "6"
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
     opendatahub.io/hardware-profile-name: default-profile
     opendatahub.io/connections: serving

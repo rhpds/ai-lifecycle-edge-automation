@@ -14,6 +14,7 @@ metadata:
   annotations:
     opendatahub.io/connection-type-ref: s3
     openshift.io/display-name: vehicle-models
+    argocd.argoproj.io/sync-wave: "5"
 stringData:
   AWS_ACCESS_KEY_ID: minio
   AWS_SECRET_ACCESS_KEY: minio123
