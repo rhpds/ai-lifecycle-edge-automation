@@ -1,5 +1,83 @@
 {{- if and .Values.rhoai.enabled .Values.modelservers.enabled }}
 ---
+# ServingRuntime for Stress Detection - OpenVINO Model Server, openvino_ir opset13
+apiVersion: serving.kserve.io/v1alpha1
+kind: ServingRuntime
+metadata:
+  name: stress-detection
+  namespace: ai-edge-project
+  annotations:
+    openshift.io/display-name: OpenVINO Model Server (Stress Detection)
+    argocd.argoproj.io/sync-wave: "6"
+  labels:
+    opendatahub.io/dashboard: "true"
+spec:
+  multiModel: false
+  supportedModelFormats:
+    - name: openvino_ir
+      version: opset13
+      autoSelect: true
+    - name: onnx
+      version: "1"
+  protocolVersions:
+    - v2
+    - grpc-v2
+  containers:
+    - name: kserve-container
+      image: openvino/model_server:2025.4
+      args:
+        - --model_name={{.Name}}
+        - --port=8001
+        - --rest_port=8888
+        - --model_path=/mnt/models
+        - --file_system_poll_wait_seconds=0
+        - --grpc_bind_address=0.0.0.0
+        - --rest_bind_address=0.0.0.0
+        - --target_device=AUTO
+        - --metrics_enable
+      ports:
+        - containerPort: 8888
+          protocol: TCP
+---
+# ServingRuntime for Time to Failure - OpenVINO Model Server, openvino_ir opset13
+apiVersion: serving.kserve.io/v1alpha1
+kind: ServingRuntime
+metadata:
+  name: time-to-failure
+  namespace: ai-edge-project
+  annotations:
+    openshift.io/display-name: OpenVINO Model Server (Time to Failure)
+    argocd.argoproj.io/sync-wave: "6"
+  labels:
+    opendatahub.io/dashboard: "true"
+spec:
+  multiModel: false
+  supportedModelFormats:
+    - name: openvino_ir
+      version: opset13
+      autoSelect: true
+    - name: onnx
+      version: "1"
+  protocolVersions:
+    - v2
+    - grpc-v2
+  containers:
+    - name: kserve-container
+      image: openvino/model_server:2025.4
+      args:
+        - --model_name={{.Name}}
+        - --port=8001
+        - --rest_port=8888
+        - --model_path=/mnt/models
+        - --file_system_poll_wait_seconds=0
+        - --grpc_bind_address=0.0.0.0
+        - --rest_bind_address=0.0.0.0
+        - --target_device=AUTO
+        - --metrics_enable
+      ports:
+        - containerPort: 8888
+          protocol: TCP
+---
 # Secret for KServe S3 (same credentials as vehicle-models; KServe requires annotations on the secret)
 apiVersion: v1
 kind: Secret
@@ -72,6 +150,7 @@ spec:
         requests:
           cpu: '2'
           memory: 4Gi
+      runtime: stress-detection
       storageUri: 's3://inference/stress-detection/'
     resources:
       limits:
@@ -122,6 +201,7 @@ spec:
         requests:
           cpu: '2'
           memory: 4Gi
+      runtime: time-to-failure
       storageUri: 's3://inference/time-to-failure/'
     resources:
       limits:
