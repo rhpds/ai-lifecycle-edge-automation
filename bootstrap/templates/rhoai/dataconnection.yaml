@@ -12,6 +12,8 @@ metadata:
     opendatahub.io/dashboard: "true"
     opendatahub.io/managed: "true"
   annotations:
+    opendatahub.io/connection-type: s3
+    opendatahub.io/connection-type-protocol: s3
     opendatahub.io/connection-type-ref: s3
     openshift.io/display-name: vehicle-models
     argocd.argoproj.io/sync-wave: "5"
