@@ -42,7 +42,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "6"
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
     opendatahub.io/hardware-profile-name: default-profile
-    opendatahub.io/connections: serving
+    opendatahub.io/connections: vehicle-models
     opendatahub.io/model-type: predictive
     security.opendatahub.io/enable-auth: 'false'
     opendatahub.io/hardware-profile-resource-version: '676888'
@@ -93,7 +93,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "6"
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
     opendatahub.io/hardware-profile-name: default-profile
-    opendatahub.io/connections: serving
+    opendatahub.io/connections: vehicle-models
     opendatahub.io/model-type: predictive
     security.opendatahub.io/enable-auth: 'false'
     opendatahub.io/hardware-profile-resource-version: '676888'
