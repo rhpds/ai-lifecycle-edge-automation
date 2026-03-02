@@ -1,0 +1,97 @@
+{{- if and .Values.rhoai.enabled .Values.modelservers.enabled }}
+---
+# Secret for KServe S3 (same credentials as vehicle-models; KServe requires annotations on the secret)
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: s3-kserve-vehicle-models
+  namespace: ai-edge-project
+  annotations:
+    serving.kserve.io/s3-endpoint: minio-microshift-vm.microshift-001.svc.cluster.local:30000
+    serving.kserve.io/s3-usehttps: "0"
+    serving.kserve.io/s3-region: us-east-1
+    serving.kserve.io/s3-useanoncredential: "false"
+    argocd.argoproj.io/sync-wave: "5"
+stringData:
+  AWS_ACCESS_KEY_ID: minio
+  AWS_SECRET_ACCESS_KEY: minio123
+---
+# ServiceAccount for KServe to pull models from S3 (vehicle-models / MinIO)
+# Referenced by both Stress Detection and Time to Failure InferenceServices
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sa-vehicle-models
+  namespace: ai-edge-project
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  labels:
+    opendatahub.io/dashboard: "true"
+secrets:
+  - name: s3-kserve-vehicle-models
+---
+# Stress Detection model server
+# OpenVINO Model Server, openvino_ir opset13, 1 replica, Small size, vehicle-models connection, path: stress-detection
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: stress-detection
+  namespace: ai-edge-project
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+  labels:
+    opendatahub.io/dashboard: "true"
+spec:
+  predictor:
+    serviceAccountName: sa-vehicle-models
+    minReplicas: 1
+    maxReplicas: 1
+    containerConcurrency: 0
+    model:
+      protocolVersion: v2
+      modelFormat:
+        name: openvino_ir
+        version: "opset13"
+      storageUri: "s3://inference/stress-detection/"
+    resources:
+      limits:
+        cpu: "2"
+        memory: 8Gi
+      requests:
+        cpu: "1"
+        memory: 8Gi
+---
+# Time to Failure model server
+# OpenVINO Model Server, openvino_ir opset13, 1 replica, Small size, vehicle-models connection, path: time-to-failure
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: time-to-failure
+  namespace: ai-edge-project
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+  labels:
+    opendatahub.io/dashboard: "true"
+spec:
+  predictor:
+    serviceAccountName: sa-vehicle-models
+    minReplicas: 1
+    maxReplicas: 1
+    containerConcurrency: 0
+    model:
+      protocolVersion: v2
+      modelFormat:
+        name: openvino_ir
+        version: "opset13"
+      storageUri: "s3://inference/time-to-failure/"
+    resources:
+      limits:
+        cpu: "2"
+        memory: 8Gi
+      requests:
+        cpu: "1"
+        memory: 8Gi
+{{- end }}

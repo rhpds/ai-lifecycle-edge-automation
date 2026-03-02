@@ -102,6 +102,9 @@ dataconnection:
 pipelineserver:
   enabled: true
 
+modelservers:
+  enabled: true
+
 patcher:
   name: rhoai-patcher
   namespace: redhat-ods-applications
