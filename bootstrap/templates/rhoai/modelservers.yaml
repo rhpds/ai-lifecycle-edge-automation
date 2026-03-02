@@ -189,7 +189,9 @@ spec:
           cpu: '2'
           memory: 4Gi
       runtime: stress-detection
-      storageUri: 's3://inference/stress-detection/'
+      storage:
+        key: vehicle-models
+        path: stress-detection
     resources:
       limits:
         cpu: '2'
@@ -240,7 +242,9 @@ spec:
           cpu: '2'
           memory: 4Gi
       runtime: time-to-failure
-      storageUri: 's3://inference/time-to-failure/'
+      storage:
+        key: vehicle-models
+        path: time-to-failure
     resources:
       limits:
         cpu: '2'
