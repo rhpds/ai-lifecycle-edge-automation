@@ -158,7 +158,7 @@ metadata:
   namespace: ai-edge-project
   annotations:
     argocd.argoproj.io/sync-wave: "6"
-    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true,Sync=false
     opendatahub.io/hardware-profile-name: default-profile
     opendatahub.io/connections: vehicle-models
     opendatahub.io/model-type: predictive
@@ -211,7 +211,7 @@ metadata:
   namespace: ai-edge-project
   annotations:
     argocd.argoproj.io/sync-wave: "6"
-    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true,Sync=false
     opendatahub.io/hardware-profile-name: default-profile
     opendatahub.io/connections: vehicle-models
     opendatahub.io/model-type: predictive
