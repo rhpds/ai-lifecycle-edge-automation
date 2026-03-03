@@ -7,7 +7,7 @@ metadata:
   name: model-training
   namespace: ai-edge-project
   annotations:
-    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-wave: "6"
 ---
 # PVC for workbench storage
 apiVersion: v1
@@ -17,7 +17,7 @@ metadata:
   namespace: ai-edge-project
   annotations:
     opendatahub.io/dashboard: "true"
-    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-wave: "6"
 spec:
   accessModes:
     - ReadWriteOnce
@@ -34,7 +34,7 @@ metadata:
   name: model-training
   namespace: ai-edge-project
   annotations:
-    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-wave: "6"
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
     opendatahub.io/image-display-name: Jupyter | TensorFlow | CUDA | Python 3.12
     opendatahub.io/hardware-profile-resource-version: '676888'
