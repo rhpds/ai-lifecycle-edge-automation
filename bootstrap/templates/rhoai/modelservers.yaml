@@ -157,8 +157,9 @@ metadata:
   name: stress-detection
   namespace: ai-edge-project
   annotations:
-    argocd.argoproj.io/sync-wave: "6"
-    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true,Sync=false
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
     opendatahub.io/hardware-profile-name: default-profile
     opendatahub.io/connections: vehicle-models
     opendatahub.io/model-type: predictive
@@ -210,8 +211,9 @@ metadata:
   name: time-to-failure
   namespace: ai-edge-project
   annotations:
-    argocd.argoproj.io/sync-wave: "6"
-    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true,Sync=false
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
     opendatahub.io/hardware-profile-name: default-profile
     opendatahub.io/connections: vehicle-models
     opendatahub.io/model-type: predictive
