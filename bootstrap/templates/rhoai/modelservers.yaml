@@ -8,6 +8,7 @@ metadata:
   namespace: ai-edge-project
   annotations:
     argocd.argoproj.io/sync-wave: "6"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
     opendatahub.io/apiProtocol: REST
     opendatahub.io/recommended-accelerators: '["nvidia.com/gpu"]'
     opendatahub.io/runtime-version: v2025.3
@@ -66,6 +67,7 @@ metadata:
   namespace: ai-edge-project
   annotations:
     argocd.argoproj.io/sync-wave: "6"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
     opendatahub.io/apiProtocol: REST
     opendatahub.io/recommended-accelerators: '["nvidia.com/gpu"]'
     opendatahub.io/runtime-version: v2025.3
