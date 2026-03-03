@@ -103,7 +103,7 @@ pipelineserver:
   enabled: true
 
 modelservers:
-  enabled: false
+  enabled: true
 
 patcher:
   name: rhoai-patcher
