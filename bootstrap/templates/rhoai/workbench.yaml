@@ -18,6 +18,7 @@ metadata:
   annotations:
     opendatahub.io/dashboard: "true"
     argocd.argoproj.io/sync-wave: "6"
+    argocd.argoproj.io/sync-options: Sync=false
 spec:
   accessModes:
     - ReadWriteOnce
