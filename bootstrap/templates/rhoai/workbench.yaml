@@ -206,4 +206,8 @@ spec:
           secret:
             defaultMode: 420
             secretName: model-training-kube-rbac-proxy-tls
+        - name: elyra-dsp-details	
+          secret:	
+            optional: true	
+            secretName: ds-pipeline-config
 {{- end }}
