@@ -124,9 +124,11 @@ spec:
               subPath: ca-bundle.crt
             - mountPath: /opt/app-root/pipeline-runtimes/
               name: runtime-images
+            - mountPath: /opt/app-root/runtimes	
+              name: elyra-dsp-details
           workingDir: /opt/app-root/src
         - name: kube-rbac-proxy
-          image: 'registry.redhat.io/rhoai/odh-kube-auth-proxy-rhel9@sha256:1f4b2b9bb5061faf17299c2ae2405ab408e2b7ce349d9831eb6045990e6da005'
+          image: 'registry.redhat.io/rhoai/odh-kube-auth-proxy-rhel9@sha256:4bff9c9b812872be081e64102cbacb711adfacd1862b5593e9809a6822720131'
           imagePullPolicy: Always
           resources:
             limits:
