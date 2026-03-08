@@ -651,7 +651,7 @@ deploymentSpec:
         - "\nif ! [ -x \"$(command -v pip)\" ]; then\n    python3 -m ensurepip ||\
           \ python3 -m ensurepip --user || apt-get install python3-pip\nfi\n\nPIP_DISABLE_PIP_VERSION_CHECK=1\
           \ python3 -m pip install --quiet --no-warn-script-location 'boto3' 'pandas'\
-          \ 'openvino' 'numpy'  &&  python3 -m pip install --quiet --no-warn-script-location\
+          \ 'openvino>=2023.2.0' 'numpy'  &&  python3 -m pip install --quiet --no-warn-script-location\
           \ 'kfp==2.14.4' '--no-deps' 'typing-extensions>=3.7.4,<5; python_version<\"\
           3.9\"' && \"$0\" \"$@\"\n"
         - sh
@@ -672,8 +672,7 @@ deploymentSpec:
           \ ('new_accuracy', float), ('current_accuracy', float)]):\n    \"\"\"\n\
           \    Component: Validate stress model against existing model in S3 using\
           \ OpenVINO\n    \"\"\"\n    import boto3\n    import os\n    import tempfile\n\
-          \    import pandas as pd\n    import numpy as np\n    from openvino.runtime\
-          \ import Core\n    from botocore.exceptions import ClientError\n\n    should_update\
+          \    import pandas as pd\n    import numpy as np\n    try:\n        from openvino.runtime import Core\n    except ImportError:\n        from openvino import Core\n    from botocore.exceptions import ClientError\n\n    should_update\
           \ = \"false\"\n    current_accuracy = 0.0\n\n    try:\n        # Create\
           \ s3 connection\n        s3_client = boto3.client(\n            's3',\n\
           \            aws_access_key_id=aws_access_key_id,\n            aws_secret_access_key=aws_secret_access_key,\n\
@@ -742,7 +741,7 @@ deploymentSpec:
         - "\nif ! [ -x \"$(command -v pip)\" ]; then\n    python3 -m ensurepip ||\
           \ python3 -m ensurepip --user || apt-get install python3-pip\nfi\n\nPIP_DISABLE_PIP_VERSION_CHECK=1\
           \ python3 -m pip install --quiet --no-warn-script-location 'boto3' 'pandas'\
-          \ 'openvino' 'numpy' 'scikit-learn'  &&  python3 -m pip install --quiet\
+          \ 'openvino>=2023.2.0' 'numpy' 'scikit-learn'  &&  python3 -m pip install --quiet\
           \ --no-warn-script-location 'kfp==2.14.4' '--no-deps' 'typing-extensions>=3.7.4,<5;\
           \ python_version<\"3.9\"' && \"$0\" \"$@\"\n"
         - sh
@@ -763,7 +762,7 @@ deploymentSpec:
           \ ('current_mae', float)]):\n    \"\"\"\n    Component: Validate TTF model\
           \ against existing model in S3 using OpenVINO\n    \"\"\"\n    import boto3\n\
           \    import os\n    import tempfile\n    import pandas as pd\n    import\
-          \ numpy as np\n    from openvino.runtime import Core\n    from sklearn.metrics\
+          \ numpy as np\n    try:\n        from openvino.runtime import Core\n    except ImportError:\n        from openvino import Core\n    from sklearn.metrics\
           \ import mean_absolute_error\n    from botocore.exceptions import ClientError\n\
           \n    should_update = \"false\"\n    current_mae = 999.0  # High default\
           \ value\n\n    try:\n        # Create s3 connection\n        s3_client =\

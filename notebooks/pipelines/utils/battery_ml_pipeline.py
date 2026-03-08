@@ -331,7 +331,7 @@ def train_ttf_model(
 
 @component(
     base_image="registry.access.redhat.com/ubi9/python-311:latest",
-    packages_to_install=["boto3", "pandas", "openvino", "numpy"]
+    packages_to_install=["boto3", "pandas", "openvino>=2023.2.0", "numpy"]
 )
 def validate_stress_model(
     new_model: Input[Model],
@@ -350,7 +350,10 @@ def validate_stress_model(
     import tempfile
     import pandas as pd
     import numpy as np
-    from openvino.runtime import Core
+    try:
+        from openvino.runtime import Core
+    except ImportError:
+        from openvino import Core
     from botocore.exceptions import ClientError
     
     should_update = "false"
@@ -449,7 +452,7 @@ def validate_stress_model(
 
 @component(
     base_image="registry.access.redhat.com/ubi9/python-311:latest",
-    packages_to_install=["boto3", "pandas", "openvino", "numpy", "scikit-learn"]
+    packages_to_install=["boto3", "pandas", "openvino>=2023.2.0", "numpy", "scikit-learn"]
 )
 def validate_ttf_model(
     new_model: Input[Model],
@@ -468,7 +471,10 @@ def validate_ttf_model(
     import tempfile
     import pandas as pd
     import numpy as np
-    from openvino.runtime import Core
+    try:
+        from openvino.runtime import Core
+    except ImportError:
+        from openvino import Core
     from sklearn.metrics import mean_absolute_error
     from botocore.exceptions import ClientError
     
