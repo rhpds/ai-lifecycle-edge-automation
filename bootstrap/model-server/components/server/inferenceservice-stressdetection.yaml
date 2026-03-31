@@ -9,7 +9,7 @@ spec:
       protocolVersion: v2
       modelFormat:
         name: openvino_ir
-      storageUri: "s3://inference/stress-detection/"
+      storageUri: "s3://inference/stress-detection/1/"
 #      args:
 #        - --layout=NHWC:NCHW
 
