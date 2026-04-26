@@ -51,27 +51,29 @@ datasciencecluster:
   apiVersion: datasciencecluster.opendatahub.io/v2
   components:
     kserve:
+      modelsAsService:
+        managementState: Removed
       nim:
         managementState: Managed
       rawDeploymentServiceConfig: Headless
       managementState: Managed
     modelregistry:
       registriesNamespace: rhoai-model-registries
-      managementState: Managed
+      managementState: Removed
     feastoperator:
-      managementState: Managed
+      managementState: Removed
     trustyai:
       eval:
         lmeval:
           permitCodeExecution: deny
           permitOnline: deny
-      managementState: Managed
+      managementState: Removed
     aipipelines:
       argoWorkflowsControllers:
         managementState: Managed
       managementState: Managed
     ray:
-      managementState: Managed
+      managementState: Removed
     kueue:
       defaultClusterQueueName: default
       defaultLocalQueueName: default
@@ -88,7 +90,7 @@ datasciencecluster:
     llamastackoperator:
       managementState: Removed
     trainingoperator:
-      managementState: Managed
+      managementState: Removed
 
 rhoaiproject:
   enabled: true
